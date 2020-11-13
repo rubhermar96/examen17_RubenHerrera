@@ -1,5 +1,9 @@
 <?php
-
+require __DIR__ . '/vendor/autoload.php';
+use Ballen\Distical\Calculator as DistanceCalculator;
+use Ballen\Distical\Entities\LatLong;
+use Illuminate\Http\Request;
+use SujalPatel\IntToEnglish\IntToEnglish;
 echo'
 
 <!DOCTYPE html>
@@ -52,27 +56,27 @@ echo'
                     <a title="Heroku" href=""><img src="imagenes/heroku.png" alt="Heroku" width="120" height="120" /></a>
                     </p>
         </aside>
-        <form class="col s12" method = "POST">
+        <form class="col s12" action="index.php">
             <div class="row">
                 
                 <div class="input-field col s2">
-                    <label for="n_entero">Introduce la Latitud Punto 1:</label>
-                    <input name="n_entero" type="text" class="validate">
+                    <label for="n_entero1">Introduce la Latitud Punto 1:</label>
+                    <input name="n_entero1" type="text" class="validate">
                     
                 </div>
                 <div class="input-field col s2">
-                    <label for="n_entero">Introduce la Longitud  Punto 1:</label>
-                    <input name="n_entero" type="text" class="validate">
+                    <label for="n_entero2">Introduce la Longitud  Punto 1:</label>
+                    <input name="n_entero2" type="text" class="validate">
                 
                 </div>
                 <div class="input-field col s2">
-                    <label for="n_entero">Introduce la Latitud Punto 2:</label>
-                    <input name="n_entero" type="text" class="validate">
+                    <label for="n_entero3">Introduce la Latitud Punto 2:</label>
+                    <input name="n_entero3" type="text" class="validate">
                 
                 </div>
                 <div class="input-field col s2">
-                    <label for="n_entero">Introduce la Longitud  Punto 2:</label>
-                    <input name="n_entero" type="text" class="validate">
+                    <label for="n_entero4">Introduce la Longitud  Punto 2:</label>
+                    <input name="n_entero4" type="text" class="validate">
                 
                 </div>
                
@@ -87,12 +91,29 @@ echo'
                 </div>
                 
             </div>
-        </form>
-    </div>
+        </form>';
+        if(isset($_REQUEST['calcular'])){
+            $latitudp1 = htmlspecialchars($_REQUEST['n_entero1'],ENT_QUOTES, 'UTF-8');
+            $longitudp1 = htmlspecialchars($_REQUEST['n_entero2'],ENT_QUOTES, 'UTF-8');
+            $latitudp2 = htmlspecialchars($_REQUEST['n_entero3'],ENT_QUOTES, 'UTF-8');
+            $longitudp2 = htmlspecialchars($_REQUEST['n_entero4'],ENT_QUOTES, 'UTF-8');
+
+            $punto1 = new Latlong($latitudp1,$longitudp1);
+            $punto2 = new Latlong($latitudp2,$longitudp2);
+
+            $calcularDistancia = new DistanceCalculator($punto1,$punto2);
+
+            $distancia = round($calcularDistancia->get()->asKilometres());
+            
+            echo '<p>La distancia entre Valladolid y Sevilla es de: '.$distancia.'</p>
+                  <p>La distancia entre esos dos puntos en Inglés es de: '.IntToEnglish::Int2Eng($distancia).'</p>';
+        };
+    echo '</div>
     <!--JavaScript at end of body for optimized loading-->
     <script type="text/javascript" src="js/materialize.min.js"></script>
 </body>
 
 </html>';
+?>
 
 
